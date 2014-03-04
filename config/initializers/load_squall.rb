@@ -1,0 +1,1 @@
+Squall.config_file("#{Rails.root.to_s}/config/squall.yml")

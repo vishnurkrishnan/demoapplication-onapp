@@ -1,0 +1,14 @@
+pkg/*
+*.gem
+.bundle
+.idea
+*.swp
+*.rbc
+test.rb
+*~
+coverage/
+doc/
+TODO
+Gemfile.lock
+.rvmrc
+.yardoc

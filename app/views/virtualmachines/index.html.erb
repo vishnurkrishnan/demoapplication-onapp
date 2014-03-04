@@ -1,0 +1,41 @@
+<h2>Dashboard</h2>
+<% if user_signed_in? %>
+  <div class="btn-group">
+    <button type="button" class="btn btn-default">Virtual Machine</button>
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+    <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+     <li class="divider"></li>
+     <li><%= link_to 'Create VM', new_virtualmachine_path %></li>
+    </ul>
+  </div>
+<%end%>
+<h3>Listing virtualmachines</h3>
+
+<table class="table table-hover success">
+  <thead>
+    <tr class="success">
+      <th>Label</th>
+      <th>Operating System</th>
+      <th>Memory</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @virtualmachines.each do |virtualmachine| %>
+      <tr>
+        <td><%= virtualmachine.Label %></td>
+        <td><%= virtualmachine.LabelOS %></td>
+        <td><%= virtualmachine.Ram %></td>
+        <td><%= link_to 'Show', virtualmachine,{ :class => "btn btn-default"} %></td>
+        <td><%= link_to 'Edit', edit_virtualmachine_path(virtualmachine),{ :class => "btn btn-default"} %></td>
+        <td><%= link_to 'Destroy', virtualmachine, method: :delete, data: { confirm: 'Are you sure?' },:class => 'btn btn-danger' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

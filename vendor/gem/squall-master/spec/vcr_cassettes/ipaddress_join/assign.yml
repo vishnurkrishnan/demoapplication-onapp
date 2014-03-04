@@ -1,0 +1,77 @@
+--- 
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: http://<USER>:<PASS>@<URL>:80/virtual_machines/404/ip_addresses.json?ip_address_join%5Bnetwork_interface_id%5D=1&ip_address_join%5Bip_address_id%5D=1
+    body: 
+    headers: 
+      content-type: 
+      - application/json
+      authorization: 
+      - Basic <REDACTED>
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 404
+      message: Not Found
+    headers: 
+      x-ua-compatible: 
+      - IE=Edge,chrome=1
+      x-powered-by: 
+      - Phusion Passenger (mod_rails/mod_rack) 3.0.1
+      content-type: 
+      - application/json; charset=utf-8
+      date: 
+      - Wed, 15 Feb 2012 15:37:01 GMT
+      server: 
+      - Apache/2.2.3 (CentOS)
+      x-runtime: 
+      - "0.020743"
+      set-cookie: 
+      - <REDACTED>
+      cache-control: 
+      - no-cache
+      status: 
+      - "404"
+      transfer-encoding: 
+      - chunked
+    body: "{\"errors\":[\"Resource not found\"]}"
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: http://<USER>:<PASS>@<URL>:80/virtual_machines/1/ip_addresses.json?ip_address_join%5Bnetwork_interface_id%5D=1&ip_address_join%5Bip_address_id%5D=1
+    body: 
+    headers: 
+      content-type: 
+      - application/json
+      authorization: 
+      - Basic <REDACTED>
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 201
+      message: Created
+    headers: 
+      x-ua-compatible: 
+      - IE=Edge,chrome=1
+      location: 
+      - http://<URL>/virtual_machines/ap31y60820gh6g/ip_addresses/1771
+      x-powered-by: 
+      - Phusion Passenger (mod_rails/mod_rack) 3.0.1
+      content-type: 
+      - application/json; charset=utf-8
+      x-runtime: 
+      - "0.074819"
+      server: 
+      - Apache/2.2.3 (CentOS)
+      date: 
+      - Wed, 15 Feb 2012 15:37:02 GMT
+      set-cookie: 
+      - <REDACTED>
+      status: 
+      - "201"
+      cache-control: 
+      - no-cache
+      transfer-encoding: 
+      - chunked
+    body: "{\"ip_address_join\":{\"created_at\":\"2012-02-15T15:37:02Z\",\"ip_address_id\":18,\"updated_at\":\"2012-02-15T15:37:02Z\",\"id\":1771,\"network_interface_id\":1357,\"virtual_machine_id\":1359,\"ip_address\":{\"ip_address\":{\"address\":\"109.123.105.213\",\"disallowed_primary\":false,\"netmask\":\"255.255.255.240\",\"created_at\":\"2010-10-27T15:28:22Z\",\"broadcast\":\"109.123.105.223\",\"updated_at\":\"2011-10-10T09:03:14Z\",\"network_id\":1,\"network_address\":\"109.123.105.208\",\"id\":18,\"free\":false,\"gateway\":\"109.123.105.209\"}}}}"
+    http_version: "1.1"

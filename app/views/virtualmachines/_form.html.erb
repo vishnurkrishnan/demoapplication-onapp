@@ -1,0 +1,163 @@
+<%= form_for(@virtualmachine) do |f| %>
+  <% if @virtualmachine.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@virtualmachine.errors.count, "error") %> prohibited this virtualmachine from being saved:</h2>
+
+      <ul>
+      <% @virtualmachine.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :Templates %><br>
+    <%= f.collection_select :Template, @tHash, :first, :last %>
+  </div>
+  <div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          Properties
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+      <div class="panel-body">
+        <div class="field">
+          <%= f.label :label %><br>
+          <%= f.text_field :Label,:required => true  %>
+        </div>
+        <div class="field">
+          <%= f.label :Hostname %><br>
+           <%= f.text_field :Hostname,:required => true  %>
+        </div>
+        <div class="field">
+          <%= f.label 'Hypervisor Zone' %><br>
+          <%= f.select :HypervisorZID, options_for_select({ "Zone 1 (XEN)" => "3" }) %>
+        </div>
+        <div class="field">
+          <%= f.label :Hypervisor %><br>
+          <%= f.select :HypervisorID, options_for_select({ "dev10-hv1" => "1","dev10-hv2" => "2" },"1") %>
+        </div>
+        <div class="field">
+          <%= f.label :Password %><br>
+          <%= f.text_field :Password %>
+        </div>
+        <div class="field">
+          <%= f.label 'Password Confirmation' %><br>
+           <%= f.text_field :PasswordConfirmation %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+          Resources
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse">
+      <div class="panel-body">
+        <div class="field">
+          <%= f.label :Ram %><br>
+          <%= f.text_field :Ram ,:required => true %>MB
+        </div>
+        <div class="field">
+          <%= f.label 'CPU Cores' %><br>
+           <%= f.text_field :CpuCore,:value => "1" %>
+        </div>
+        <div class="field">
+          <%= f.label 'CPU Priority' %><br>
+          <%= f.text_field :CpuPrio,:value => "1" %>%
+        </div><br>
+        <label>Primary Disk</label>
+        <hr>
+        <div class="field">
+          <%= f.label 'Data Store Zone' %><br>
+          <%= f.select :DSpZone, options_for_select({ "onapp-datastores" => "1" }) %>
+        </div>
+        <div class="field">
+          <%= f.label 'Primary Disk Size' %><br>
+          <%= f.text_field :PDSize,:value => "5",placeholder: "GB" %>GB
+        </div><br>
+        <label>Swap Disk</label>
+        <hr>
+        <div class="field">
+          <%= f.label 'Data Store Zone' %><br>
+          <%= f.select :DSsZone, options_for_select({ "onapp-datastores" => "1" }) %>
+        </div>
+        <div class="field">
+          <%= f.label 'Swap Disk Size' %><br>
+          <%= f.text_field :SDSize,:value => "1",placeholder: "GB" %>GB
+        </div><br>
+        <label>Network Configuration</label>
+        <hr>
+        <div class="field">
+          <%= f.label 'Network Zone' %><br>
+          <%= f.select :NetZone, options_for_select({ "Private" => "2","Public" => "4" },"2") %>
+        </div>
+        <div class="field">
+          <%= f.label 'Port Speed' %><br>
+          <%= f.text_field :PortSpeed,:value => "1" %>Mbs
+        </div><br>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+          Recipes
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse">
+      <div class="panel-body">
+        <div class="field">
+          <label>Recipe Assignment</label>
+        </div>
+        <hr>  
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+          Confirmation
+        </a>
+      </h4>
+    </div>
+    <div id="collapseFour" class="panel-collapse collapse">
+      <div class="panel-body">
+        <div class="field">
+          <label>Automation Settings</label>
+        </div>
+        <hr>
+        <div class="field">
+          <%= f.label "Enable Automated Backup" %><br>
+          <%= f.check_box :EAB %>
+        </div>
+        <div class="field">
+          <%= f.label 'build Virtual Server' %><br>
+          <%= f.check_box :BVS %>
+        </div>
+        <div class="field">
+          <%= f.label 'boot Virtual Server' %><br>
+          <%= f.check_box :BootVS %>
+        </div><br> 
+      </div>
+    </div>
+  </div>
+
+</div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

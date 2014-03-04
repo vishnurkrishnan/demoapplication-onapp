@@ -1,0 +1,60 @@
+<p>
+  <h3><%= @virtualmachine.Label %></h3>
+</p>
+
+<br>
+<div class="btn-group">
+    <button type="button" class="btn btn-success ">
+    <span class="glyphicon glyphicon-cog"></span> VS Options 
+    </button>
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+    <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+     <li class="divider"></li>
+     <p><li><%= link_to 'Startup virtual server', startup_virtualmachine_path(@virtualmachine),:class => "btn btn-success"  %></li></p>
+     <p><li><%= link_to 'Reboot virtual server', reboot_virtualmachine_path(@virtualmachine),:class => "btn btn-success"  %></li></p>
+     <p><li><%= link_to 'Shutdown virtual server', shutdown_virtualmachine_path(@virtualmachine),:class => "btn btn-danger"  %></li></p>
+    </ul>
+</div>
+<div class="btn-group">
+    <button type="button" class="btn btn-success ">
+    <span class="glyphicon glyphicon-globe"></span> Network 
+    </button>
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+    <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+     <li class="divider"></li>
+     <p><li><%= link_to 'Rebuild Network', rebuildnw_virtualmachine_path(@virtualmachine),:class => "btn btn-success"  %></li></p>
+    </ul>
+</div>
+<br><br>
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading"><strong><h4>Information</h4></strong></div>
+  <!-- List group -->
+  <ul class="list-group">
+    <li class="list-group-item"><strong>Status :</strong>   
+      <% unless @virtualmachine.BootVS==true %>
+      <label class="alert alert-danger">Server is going Down </label>
+      <% else %>
+      <label class="alert alert-success">Server is going Up </label>
+      <% end %>
+    </li>
+    <li class="list-group-item"><strong>Memory :</strong>  <%= @virtualmachine.Ram %></li>
+    <li class="list-group-item"><strong>Cpu(s) :</strong>  <%= @virtualmachine.CpuCore %></li>
+    <li class="list-group-item"><strong>Cpu Priority :</strong>  <%= @virtualmachine.CpuPrio %>%</li>
+    <li class="list-group-item"><strong>Disk Size :</strong>  <%= @virtualmachine.PDSize %></li>
+    <li class="list-group-item"><strong>Network Speed :</strong>  <%= @virtualmachine.PortSpeed %>Mbps</li>
+    <li class="list-group-item"><strong>IP Address :</strong>  .......</li>
+  </ul>
+</div>
+
+<div class="modal fade" id="myModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  
+</div>
+
+<%= link_to 'Back',virtualmachines_path, :class => "btn btn-default" %>

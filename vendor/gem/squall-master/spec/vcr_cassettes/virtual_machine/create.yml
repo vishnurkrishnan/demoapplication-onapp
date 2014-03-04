@@ -1,0 +1,38 @@
+--- 
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: http://<USER>:<PASS>@<URL>:80/virtual_machines.json?virtual_machine%5Bcpu_shares%5D=10&virtual_machine%5Bprimary_disk_size%5D=10&virtual_machine%5Btemplate_id%5D=1&virtual_machine%5Blabel%5D=testmachine&virtual_machine%5Bhostname%5D=testmachine&virtual_machine%5Bmemory%5D=512&virtual_machine%5Bcpus%5D=1
+    body: 
+    headers: 
+      content-type: 
+      - application/json
+      authorization: 
+      - Basic <REDACTED>
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 422
+      message: Unprocessable Entity
+    headers: 
+      x-ua-compatible: 
+      - IE=Edge,chrome=1
+      x-powered-by: 
+      - Phusion Passenger (mod_rails/mod_rack) 3.0.1
+      content-type: 
+      - application/json; charset=utf-8
+      x-runtime: 
+      - "0.285970"
+      server: 
+      - Apache/2.2.3 (CentOS)
+      date: 
+      - Tue, 07 Feb 2012 16:55:28 GMT
+      set-cookie: 
+      - _session_id=23378ba2608e14050dacc611f4c12762; path=/; HttpOnly
+      status: 
+      - "422"
+      cache-control: 
+      - no-cache
+      transfer-encoding: 
+      - chunked
+    body: "{\"errors\":[\"Network interfaces is invalid\"]}"
+    http_version: "1.1"

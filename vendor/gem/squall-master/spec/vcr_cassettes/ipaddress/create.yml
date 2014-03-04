@@ -1,0 +1,40 @@
+--- 
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: http://<USER>:<PASS>@<URL>:80/settings/networks/1/ip_addresses.json?ip_address%5Baddress%5D=109.123.91.24&ip_address%5Bnetmask%5D=255.255.255.194&ip_address%5Bnetwork_address%5D=109.123.91.66&ip_address%5Bbroadcast%5D=109.123.91.129&ip_address%5Bgateway%5D=109.123.91.67
+    body: 
+    headers: 
+      content-type: 
+      - application/json
+      authorization: 
+      - Basic <REDACTED>
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 201
+      message: Created
+    headers: 
+      x-ua-compatible: 
+      - IE=Edge,chrome=1
+      location: 
+      - http://<URL>/settings/networks/1/ip_addresses
+      x-powered-by: 
+      - Phusion Passenger (mod_rails/mod_rack) 3.0.1
+      content-type: 
+      - application/json; charset=utf-8
+      x-runtime: 
+      - "0.087995"
+      server: 
+      - Apache/2.2.3 (CentOS)
+      date: 
+      - Wed, 15 Feb 2012 15:01:17 GMT
+      set-cookie: 
+      - <REDACTED>
+      status: 
+      - "201"
+      cache-control: 
+      - no-cache
+      transfer-encoding: 
+      - chunked
+    body: "{\"ip_address\":{\"netmask\":\"255.255.255.194\",\"disallowed_primary\":null,\"address\":\"109.123.91.24\",\"created_at\":null,\"network_address\":\"109.123.91.0\",\"network_id\":1,\"updated_at\":null,\"broadcast\":\"109.123.91.31\",\"free\":true,\"gateway\":\"109.123.91.67\"}}"
+    http_version: "1.1"
