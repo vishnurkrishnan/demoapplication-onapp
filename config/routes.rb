@@ -11,7 +11,7 @@ TestOnapp::Application.routes.draw do
    root 'virtualmachines#index'
 
   # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
+     get '/getlist' => 'ipaddresses#getlist'
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
@@ -25,6 +25,12 @@ TestOnapp::Application.routes.draw do
           get 'reboot'
           get 'rebuildnw'
           get 'suspend'
+          get 'cpuusage'
+          resources :ipaddresses do
+          member do
+              get 'destroy_ip'
+          end
+          end
         end
       end
 

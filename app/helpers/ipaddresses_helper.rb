@@ -1,0 +1,2 @@
+module IpaddressesHelper
+end

@@ -1,0 +1,35 @@
+<%= form_for(@ipaddress) do |f| %>
+  <% if @ipaddress.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@ipaddress.errors.count, "error") %> prohibited this ipaddress from being saved:</h2>
+
+      <ul>
+      <% @ipaddress.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading"><strong><h4>Allocate New IP Address from Global Pool</h4></strong></div>
+  <!-- List group -->
+  <ul class="list-group">
+    <li class="list-group-item">
+    Select which network interface this IP address should be assigned to.<br><br>
+    <strong>Network Interface</strong> <%= f.collection_select :interface, @iphash, :first, :last,:prompt => "Interface" %>
+  </li>
+    <li class="list-group-item">
+    Select which IP address you wish to assign.<br><br>
+    <%= f.label "Ip Address" %> 
+    <div id="unips">
+          <select name="ips">
+            <option value="">--Select Ip--</option>
+          </select>
+    <div>
+  </ul>
+</div>
+  <div class="actions">
+    <%= f.submit "Add Ip Address Assignment" %>
+  </div>
+<% end %>

@@ -12,6 +12,20 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
 //= require bootstrap
 //= require_tree .
+
+$(document).ready(function() {
+ $("#ipaddress_interface").change(function() {
+ 	var interFID = $("#ipaddress_interface").val();
+ 	$.ajax({
+            type: 'GET',
+            url: "/getlist",
+            data: 'intIDp='+interFID,
+            success: function(msg) {
+
+              }
+    });
+    return false;
+ });
+});

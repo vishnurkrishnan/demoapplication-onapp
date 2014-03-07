@@ -1,6 +1,8 @@
+require 'googlecharts'
+require 'gchart'
 class VirtualmachinesController < ApplicationController
-  before_action :vm_object!, only: [:build,:startup,:shutdown,:reboot,:rebuildnw,:suspend]
-  before_action :set_virtualmachine, only: [:show, :edit, :update, :destroy,:shutdown,:reboot,:startup]
+  before_action :vm_object!, only: [:show,:build,:startup,:shutdown,:reboot,:rebuildnw,:suspend,:cpuusage]
+  before_action :set_virtualmachine, only: [:show, :edit, :update, :destroy,:shutdown,:reboot,:startup,:ip_addresses]
 
   # GET /virtualmachines
   # GET /virtualmachines.json
@@ -12,6 +14,7 @@ class VirtualmachinesController < ApplicationController
   # GET /virtualmachines/1
   # GET /virtualmachines/1.json
   def show
+    
   end
 
   # GET /virtualmachines/new
@@ -70,6 +73,24 @@ class VirtualmachinesController < ApplicationController
     end
   end
 
+  #Cpu Usage
+  def cpuusage
+    cpuArray = Array.new
+    dateArray = Array.new
+    @cpu_usageres = @vmUpdate.usageVMcall(params[:id])
+    @cpu_usageres.each do |u|
+      cpuArray.push(u['cpu_time'])
+      dateArray.push(Time.parse(u['created_at']).in_time_zone.strftime("%d/%m %H:%M"))
+    end
+    @chart = Gchart.line(:size => '700x400', 
+          :title => 'CPU Usage(Cores) Hourly', :title_color => 'FF0000', :title_size => '20',
+          :data => cpuArray ,
+          :axis_with_labels => ['x', 'y'], 
+          :axis_labels => [dateArray], 
+          :axis_range => [cpuArray, dateArray]
+            )
+  end
+
   #startup
   def startup
     #startvm = Virtualmachine.new
@@ -112,6 +133,7 @@ class VirtualmachinesController < ApplicationController
     end
     redirect_to :action => :show
   end
+
 
   #Rebuild Network
   def rebuildnw

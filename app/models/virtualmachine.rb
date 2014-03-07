@@ -1,4 +1,5 @@
 class Virtualmachine < ActiveRecord::Base
+  has_many :ipaddresses
   #validates :Label, presence: true
   #validates :Hostname, presence: true
   #validates :RemoteID, presence: true
@@ -44,11 +45,14 @@ class Virtualmachine < ActiveRecord::Base
        #type_of_format:  ,
        #enable_autoscale:   
 }
-     params.merge!({:hypervisor_id => paramsForvm["HypervisorID"]}) unless paramsForvm["HypervisorID"].blank?    
-     puts ".in create..#{params}"
+       params.merge!({:hypervisor_id => paramsForvm["HypervisorID"]}) unless paramsForvm["HypervisorID"].blank?    
+       puts ".in create..#{params}"
        vm = Squall::VirtualMachine.new
        vm_response = vm.create params
+       #p vm_response["virtual_machine"]["id"]
+       #vm_respose_int = vm.createInt(vm_response["virtual_machine"]["id"],{:label => "eth1", :network_join_id => "5", :rate_limit => "0"})
        puts "...response from #{vm_response}"
+       #puts "...response from #{vm_respose_int}"
        return vm_response  
 	end	
    
@@ -90,6 +94,12 @@ class Virtualmachine < ActiveRecord::Base
     return vmbuild_response
   end
 
+  def usageVMcall(idForCpu)
+    getRemote = Virtualmachine.find(idForCpu)
+    vmusage = Squall::VirtualMachine.new
+    vmusage_response = vmusage.cpu_usage(getRemote.RemoteID,Time.now - 1.day,Time.now)
+    return vmusage_response
+  end
   #Start VS
   def startVMcall(idForStart)
     getRemote = Virtualmachine.find(idForStart)

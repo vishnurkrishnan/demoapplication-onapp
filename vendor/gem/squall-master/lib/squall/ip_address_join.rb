@@ -21,7 +21,7 @@ module Squall
     # Returns a Hash.
     def assign(virtual_machine_id, options = {})
       response = request(:post, "/virtual_machines/#{virtual_machine_id}/ip_addresses.json", default_params(options))
-      response['ip_address_join']
+      #response['ip_address_join']
     end
 
     # Public: Deletes an IP address assignment from a VM

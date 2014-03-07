@@ -286,5 +286,37 @@ module Squall
       response = request(:post, "/virtual_machines/#{id}/vm_stats.json")
       response['virtual_machine']
     end
+
+    #Get Cpu usage
+    def cpu_usage(id, from = nil, to = nil)
+      from, to = from.utc.strftime("%Y-%m-%d+%H:%M"), to.utc.strftime("%Y-%m-%d+%H:%M") if from && to      
+      response = request(:get, "/virtual_machines/#{id}/cpu_usage.json?period[startdate]=#{from}&period[enddate]=#{to}")
+      response.collect {|r| p r['cpu_hourly_stat']}
+    end
+
+    ########Network Interfaces##########
+
+    # Returns a list of all Network Interfaces in a VirtualMachine
+    def listInt(virtual_machine_id)
+      req = request(:get, "/virtual_machines/#{virtual_machine_id}/network_interfaces.json")
+      req.collect { |nw| nw['network_interface'] }
+    end
+    
+    # Add a new Network Interface to a VirtualMachine
+    def createInt(virtual_machine_id, options = {})
+      params.required(:label, :network_join_id, :rate_limit).validate!(options)
+      req = request(:post, "/virtual_machines/#{virtual_machine_id}/network_interfaces.json", default_params(options))
+      req.first[1]
+    end
+    
+    # Get a list of all free IP addresses for a Network Intrerface
+    def unassigned_ip_addresses(network_interface_id)
+      req = request(:get, "/network_interfaces/#{network_interface_id}/ip_addresses.json?used_ip=no")
+      req.collect { |ip| ip }
+    end
+
+
+    ########Network Interfaces##########
+
   end
 end

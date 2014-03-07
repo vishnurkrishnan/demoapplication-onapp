@@ -5,8 +5,16 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
  
   def vm_object!
-  	@vmUpdate = Virtualmachine.new  	
-
+  	@vmUpdate = Virtualmachine.new
+  	@vm = Squall::VirtualMachine.new 
   end
 
+  def ip_object!
+    @ipobject = Ipaddress.new
+  	@ip= Squall::IpAddress.new
+  end
+
+  def newIP_object!
+    @newIP = Squall::IpAddressJoin.new
+  end
 end
