@@ -4,8 +4,7 @@
   <thead>
     <tr class="success">
       <th>IP Address</th>
-      <th>Netmask</th>
-      <th>Gateway</th>
+      <th>Interface</th>
       <th></th>
       <th></th>
       <th></th>
@@ -13,12 +12,11 @@
   </thead>
 
   <tbody>
-    <% @ipaddresses["ip_addresses"].each do |ipaddress|  %>
+    <% @ipaddresses.each do |ipaddress|  %>
       <tr>
-        <td><%= ipaddress["ip_address"]["address"] %></td>
-        <td><%= ipaddress["ip_address"]["netmask"] %></td>
-        <td><%= ipaddress["ip_address"]["gateway"] %></td>
-        <td><%= link_to 'Destroy', destroy_ip_ipaddress_path, :disabled => true, data: { confirm: 'Are you sure?' },:class => 'btn btn-danger' %></td>
+        <td><%= ipaddress.ip_address %></td>
+        <td><%= ipaddress.interface %></td>
+        <td><%= link_to 'Destroy', virtualmachine_ipaddress_path(ipaddress.virtualmachine_id,ipaddress.id), method: :delete, data: { confirm: 'Are you sure?' },:class => 'btn btn-danger' %></td>
         <td></td>
         <td></td>
       </tr>
@@ -28,4 +26,4 @@
 
 <br>
 
-<%= link_to 'Allocate New IP Address Assignment', new_ipaddress_path,{   :class => "btn btn-default"} %>
+<%= link_to 'Allocate New IP Address Assignment', new_virtualmachine_ipaddress_path,{   :class => "btn btn-default"} %>

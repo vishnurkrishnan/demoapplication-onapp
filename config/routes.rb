@@ -26,12 +26,9 @@ TestOnapp::Application.routes.draw do
           get 'rebuildnw'
           get 'suspend'
           get 'cpuusage'
-          resources :ipaddresses do
-          member do
-              get 'destroy_ip'
-          end
-          end
+          get 'backups'
         end
+        resources :ipaddresses
       end
 
   # Example resource route with options:

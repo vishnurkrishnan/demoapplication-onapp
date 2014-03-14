@@ -15,6 +15,7 @@
     <ul class="dropdown-menu" role="menu">
      <li class="divider"></li>
      <p><li><%= link_to 'CPU Usage', cpuusage_virtualmachine_path(@virtualmachine),:class => "btn btn-success"  %></li></p>
+     <p><li><%= link_to 'Backups', backups_virtualmachine_path(@virtualmachine),:class => "btn btn-success"  %></li></p>
      <p><li><%= link_to 'Startup virtual server', startup_virtualmachine_path(@virtualmachine),:class => "btn btn-success"  %></li></p>
      <p><li><%= link_to 'Reboot virtual server', reboot_virtualmachine_path(@virtualmachine),:class => "btn btn-success"  %></li></p>
      <p><li><%= link_to 'Shutdown virtual server', shutdown_virtualmachine_path(@virtualmachine),:class => "btn btn-danger"  %></li></p>
@@ -31,7 +32,7 @@
     <ul class="dropdown-menu" role="menu">
      <li class="divider"></li>
      
-     <p><li><%= link_to 'IP Addresses', ipaddresses_path,:class => "btn btn-success"  %></li></p>
+     <p><li><%= link_to 'IP Addresses', virtualmachine_ipaddresses_path(@virtualmachine),:class => "btn btn-success"  %></li></p>
      <p><li><%= link_to 'Rebuild Network', rebuildnw_virtualmachine_path(@virtualmachine),:class => "btn btn-success"  %></li></p>
     </ul>
 </div>
@@ -52,8 +53,11 @@
     <li class="list-group-item"><strong>Cpu(s) :</strong>  <%= @virtualmachine.CpuCore %></li>
     <li class="list-group-item"><strong>Cpu Priority :</strong>  <%= @virtualmachine.CpuPrio %>%</li>
     <li class="list-group-item"><strong>Disk Size :</strong>  <%= @virtualmachine.PDSize %></li>
-    <li class="list-group-item"><strong>Network Speed :</strong>  <%= @virtualmachine.PortSpeed %>Mbps</li>
-    <li class="list-group-item"><strong>IP Address :</strong>  .......</li>
+    <li class="list-group-item"><strong>Monthly Bandwidth Usage :</strong>  <%= @bandwidthM["monthly_bandwidth_used"] %></li>
+    <li class="list-group-item"><strong>IP Address :<br>
+    <% @allIps.each do |allIp| %>
+     </strong> <%= allIp['ip_address'] %> </li>
+     <% end %>
   </ul>
 </div>
 

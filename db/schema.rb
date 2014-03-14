@@ -11,17 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140307044616) do
+ActiveRecord::Schema.define(version: 20140306050208) do
 
   create_table "ipaddresses", force: true do |t|
     t.string   "ip_address"
+    t.integer  "ip"
     t.string   "interface"
     t.integer  "virtualmachine_id", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "network_interfaces", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end

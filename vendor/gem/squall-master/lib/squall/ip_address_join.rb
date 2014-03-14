@@ -31,7 +31,7 @@ module Squall
     #
     # Returns a Hash.
     def delete(virtual_machine_id, ip_address_id)
-      request(:delete, "/virtual_machines/#{virtual_machine_id}/ip_addresses/#{ip_address_id}.json")
+      request(:delete, "/virtual_machines/#{virtual_machine_id}/ip_addresses/#{ip_address_id}.json?rebuild_network=1")   
     end
   end
 end

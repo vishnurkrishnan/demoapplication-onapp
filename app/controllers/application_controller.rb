@@ -17,4 +17,9 @@ class ApplicationController < ActionController::Base
   def newIP_object!
     @newIP = Squall::IpAddressJoin.new
   end
+
+  def newbackup_object!
+    @disk = Squall::Disk.new
+    @backup = Squall::Backup.new
+  end
 end

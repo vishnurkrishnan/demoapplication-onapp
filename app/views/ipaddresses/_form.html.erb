@@ -1,4 +1,4 @@
-<%= form_for(@ipaddress) do |f| %>
+<%= form_for([@rid,@ipaddress]) do |f| %>
   <% if @ipaddress.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@ipaddress.errors.count, "error") %> prohibited this ipaddress from being saved:</h2>

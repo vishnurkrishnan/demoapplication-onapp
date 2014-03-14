@@ -1,12 +1,14 @@
 require 'googlecharts'
 require 'gchart'
 class VirtualmachinesController < ApplicationController
-  before_action :vm_object!, only: [:show,:build,:startup,:shutdown,:reboot,:rebuildnw,:suspend,:cpuusage]
-  before_action :set_virtualmachine, only: [:show, :edit, :update, :destroy,:shutdown,:reboot,:startup,:ip_addresses]
+  before_action :newbackup_object!, only: [:backups]
+  before_action :vm_object!, only: [:update,:show,:build,:startup,:shutdown,:reboot,:rebuildnw,:suspend,:cpuusage]
+  before_action :set_virtualmachine, only: [:rebuildnw,:cpuusage,:show, :edit, :update, :destroy,:shutdown,:reboot,:startup,:ip_addresses,:backups]
 
   # GET /virtualmachines
   # GET /virtualmachines.json
   def index
+
     @virtualmachines = Virtualmachine.all
 
   end
@@ -14,7 +16,9 @@ class VirtualmachinesController < ApplicationController
   # GET /virtualmachines/1
   # GET /virtualmachines/1.json
   def show
-    
+    @bandwidthM = @vm.show(@virtualmachine.RemoteID).select{|bandwidth| bandwidth["monthly_bandwidth_used"]}
+    @allIps = Ipaddress.joins(:virtualmachine).select{|ip| ip["ip_address"] }
+
   end
 
   # GET /virtualmachines/new
@@ -59,9 +63,8 @@ class VirtualmachinesController < ApplicationController
   # PATCH/PUT /virtualmachines/1
   # PATCH/PUT /virtualmachines/1.json
   def update
-    updateVM = Virtualmachine.new
-    #puts "....#{params["virtualmachine"]}"
-    @response_edit = updateVM.editVMcall(params["virtualmachine"])
+    @response_edit = @vmUpdate.editVMcall(params["virtualmachine"])
+    p @response_edit
     respond_to do |format|
       if @virtualmachine.update(virtualmachine_params)
         format.html { redirect_to @virtualmachine, notice: 'Virtualmachine was successfully updated.' }
@@ -77,7 +80,7 @@ class VirtualmachinesController < ApplicationController
   def cpuusage
     cpuArray = Array.new
     dateArray = Array.new
-    @cpu_usageres = @vmUpdate.usageVMcall(params[:id])
+    @cpu_usageres = @vmUpdate.usageVMcall(@virtualmachine.RemoteID)
     @cpu_usageres.each do |u|
       cpuArray.push(u['cpu_time'])
       dateArray.push(Time.parse(u['created_at']).in_time_zone.strftime("%d/%m %H:%M"))
@@ -87,14 +90,25 @@ class VirtualmachinesController < ApplicationController
           :data => cpuArray ,
           :axis_with_labels => ['x', 'y'], 
           :axis_labels => [dateArray], 
-          :axis_range => [cpuArray, dateArray]
-            )
+          :axis_range => [cpuArray, dateArray])
+  end
+
+  #Backups
+  def backups
+    @disk_response = @disk.vm_disk_list(@virtualmachine.RemoteID).find{|disk| disk["primary"] == true}
+    @backup_response = @backup.create(@disk_response['id'])
+    #unless @backup_response.has_key?("errors")
+      flash[:notice] = @backup_response
+    #else
+      #flash.keep[:notice] = "Errors are #{@backup_response["errors"]}"
+    #end 
+    p @backup_response
   end
 
   #startup
   def startup
     #startvm = Virtualmachine.new
-    @response_start = @vmUpdate.startVMcall(params[:id])
+    @response_start = @vmUpdate.startVMcall(@virtualmachine.RemoteID)
     unless @response_start.has_key?("errors")
      @virtualmachine.BootVS = true
      @virtualmachine.save
@@ -102,13 +116,13 @@ class VirtualmachinesController < ApplicationController
     else
      flash.keep[:notice] = "Errors are #{@response_start["errors"]}"
     end
-    redirect_to :action => :show
+     redirect_to :action => :show
   end
 
   #ShutDown
   def shutdown
     #shutVM = Virtualmachine.new  
-    @response_shut = @vmUpdate.shutdownVMcall(params[:id])
+    @response_shut = @vmUpdate.shutdownVMcall(@virtualmachine.RemoteID)
     unless @response_shut.has_key?("errors")
      @virtualmachine.BootVS = false
      @virtualmachine.save
@@ -123,11 +137,11 @@ class VirtualmachinesController < ApplicationController
   #Reboot
   def reboot
     #rebootVM = Virtualmachine.new
-    @response_reboot = @vmUpdate.rebootVMcall(params[:id])
+    @response_reboot = @vmUpdate.rebootVMcall(@virtualmachine.RemoteID)
     unless @response_reboot.has_key?("errors")
      @virtualmachine.BootVS = true
      @virtualmachine.save
-     flash.keep[:notice] = "Virtual server will be now started."
+     flash.keep[:notice] = "Virtual server will be now reboot."
     else
      flash.keep[:notice] = "Errors are #{@response_reboot["errors"]}"
     end
@@ -137,9 +151,9 @@ class VirtualmachinesController < ApplicationController
 
   #Rebuild Network
   def rebuildnw
-    @response_rebuild = @vmUpdate.rebuildVMcall(params[:id])
+    @response_rebuild = @vmUpdate.rebuildVMcall(@virtualmachine.RemoteID)
     unless @response_rebuild.has_key?("errors")
-     flash.keep[:notice] = "Virtual server will be now rebuild."
+     flash.keep[:notice] = "Network interface will be rebuilt for this Virtual server"
     else
      flash.keep[:notice] = "Errors are #{@@response_rebuild["errors"]}"
     end

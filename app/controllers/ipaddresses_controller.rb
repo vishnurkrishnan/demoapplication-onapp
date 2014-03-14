@@ -1,15 +1,15 @@
 class IpaddressesController < ApplicationController
   before_action :set_ipaddress, only: [:show, :edit, :update]
+  before_action :load_virtualmachine,except: :getlist
   before_action :vm_object!, only: [:index,:new,:getlist]
-  before_action :ip_object!, only: [:index,:create]
-  before_action :newIP_object!,only: [:destroy_ip]
+  before_action :ip_object!, only: [:index,:create,:destroy]
+  before_action :newIP_object!,only: [:index,:destroy]
   # GET /ipaddresses
   # GET /ipaddresses.json
   def index
-    #@ipaddresses = Ipaddress.all
-    remotevmID = Virtualmachine.find(params[:id])
-    @ipaddresses = @vm.show remotevmID.RemoteID
-
+    
+    @ip_joins = @ipobject.saveIP(@virtualmachine.RemoteID,@virtualmachine.id)
+    @ipaddresses = @virtualmachine.ipaddresses
   end
 
   # GET /ipaddresses/1
@@ -19,10 +19,10 @@ class IpaddressesController < ApplicationController
 
   # GET /ipaddresses/new
   def new
-    @iphash = Hash.new
+    @rid = Virtualmachine.find(params[:virtualmachine_id])
     @ipaddress = Ipaddress.new
-    rid = Virtualmachine.find(params[:id])
-    @nwIntDet = @vm.listInt(rid.RemoteID)
+    @iphash = Hash.new
+    @nwIntDet = @vm.listInt(@rid.RemoteID)
     @nwIntDet.each do |a|
      @iphash[a["id"]] = a["label"] 
     end
@@ -36,25 +36,16 @@ class IpaddressesController < ApplicationController
   # POST /ipaddresses
   # POST /ipaddresses.json
   def create
-    getRemID = Virtualmachine.find(params[:id])
     @ipaddress = Ipaddress.new(ipaddress_params)
-    @vmIPjoin_res = @ipobject.addIp(getRemID.RemoteID,params)
+    @vmIPjoin_res = @ipobject.addIp(@virtualmachine.RemoteID,params)
     unless @vmIPjoin_res.has_key?("errors")
-      #@ipaddress.virtualmachine_id = getRemID.RemoteID
-      #p @ipaddress.virtualmachine_id
-      #respond_to do |format|
-      #  if @ipaddress.save
-      #    format.html { redirect_to @ipaddress, notice: 'Ipaddress was successfully created.' }
-      #    format.json { render action: 'show', status: :created, location: @ipaddress }
-      #  else
-      #    format.html { render action: 'new' }
-      #    format.json { render json: @ipaddress.errors, status: :unprocessable_entity }
-      #  end
-      #end
-      redirect_to @ipaddress, notice: 'Ipaddress was successfully created.'
+      respond_to do |format|
+
+        format.html { redirect_to virtualmachine_ipaddresses_url, notice: 'Ipaddress was successfully created.' }
+      end
     else
-     flash.keep[:notice] = "Errors are #{@vmIPjoin_res["errors"]}"
-     redirect_to action: :new
+      flash.keep[:notice] = "Errors are #{@vmIPjoin_res["errors"]}"
+      redirect_to action: :new
     end
   end
 
@@ -75,20 +66,21 @@ class IpaddressesController < ApplicationController
   # DELETE /ipaddresses/1
   # DELETE /ipaddresses/1.json
   def destroy
-    @ipaddress.destroy
+    @ipaddress = Ipaddress.find(params[:id])
+    @ipJoinID = @newIP.list(@virtualmachine.RemoteID).find{|joinipID| joinipID["ip_address_id"] == @ipaddress.ip }  
+    @responsedelt = @ipobject.deleteIP(@virtualmachine.RemoteID,@ipJoinID['id'])
+    p @responsedelt
     respond_to do |format|
-      format.html { redirect_to ipaddresses_url }
-      format.json { head :no_content }
+    if @responsedelt.blank?
+       @ipaddress.destroy
+       format.html { redirect_to [@virtualmachine, @ipaddress],notice: 'IP Address will be delete shortly.' }
+       format.json { head :no_content }    
+    else
+       format.html { redirect_to virtualmachine_ipaddresses_url,notice: "Errors are #{@responsedelt["errors"]}" }
+    end
     end
   end
 
-
-  def destroy_ip
-   getRemID = Virtualmachine.find(params[:id])
-   p params["token"]
-   #@response_dltIP = @newIP.delete(getRemID.RemoteID,params[:token])
-
-  end
   #for Ajax call via getting the unassigned IPs
   def getlist
     @uniphash = Hash.new
@@ -103,12 +95,17 @@ class IpaddressesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+
+    def load_virtualmachine
+      @virtualmachine = Virtualmachine.find(params[:virtualmachine_id])
+    end
+
     def set_ipaddress
       @ipaddress = Ipaddress.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def ipaddress_params
-      params.require(:ipaddress).permit(:ip_address,:interface,:virtualmachine_id)
+      params.require(:ipaddress).permit(:ip_address,:ip,:interface,:virtualmachine_id)
     end
 end
